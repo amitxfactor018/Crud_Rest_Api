@@ -1,7 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const tasks = require('./taskschema')
-
 const app = express()
 require('dotenv').config()
 
@@ -12,7 +11,7 @@ app.get('/', (req, res) =>{
 })
 
 
-// Add data
+// Add task
 app.post('/tasks', async(req, res) => {
     try {
         const task = await tasks.create(req.body)
@@ -24,8 +23,8 @@ app.post('/tasks', async(req, res) => {
     }
 })
 
-// Get the data
-// All data at once
+// Get all the tasks
+// All tasks at once
 app.get('/tasks', async(req, res) => {
     try {
         const task = await tasks.find({});
@@ -34,7 +33,7 @@ app.get('/tasks', async(req, res) => {
         res.status(500).json({message: error.message})
     }
 })
-//Data by id
+//Tasks by id
 app.get('/tasks/:id', async(req, res) =>{
     try {
         const {id} = req.params;
@@ -45,13 +44,12 @@ app.get('/tasks/:id', async(req, res) =>{
     }
 })
 
-// Update data by id
-// update a product
+// Update Tasks by id
 app.put('/tasks/:id', async(req, res) => {
     try {
         const {id} = req.params;
         const task = await tasks.findByIdAndUpdate(id, req.body);
-        // we cannot find any course in database
+        // we cannot find such task in database
         if(!task){
             return res.status(404).json({message: `cannot find any Task with ID ${id}`})
         }
@@ -63,13 +61,13 @@ app.put('/tasks/:id', async(req, res) => {
     }
 })
 
-// delete a product
+// delete a task
 
 app.delete('/tasks/:id', async(req, res) =>{
     try {
         const {id} = req.params;
         const task = await tasks.findByIdAndDelete(id);
-        // If course does not exist
+        // If task does not exist
         if(!task){
             return res.status(404).json({message: `cannot find any task with ID ${id}`})
         }
