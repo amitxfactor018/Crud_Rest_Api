@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const Course = require('./courseschema')
+const tasks = require('./taskschema')
 
 const app = express()
+require('dotenv').config()
 
 app.use(express.json())
 // Routes
@@ -12,10 +13,10 @@ app.get('/', (req, res) =>{
 
 
 // Add data
-app.post('/Course', async(req, res) => {
+app.post('/tasks', async(req, res) => {
     try {
-        const course = await Course.create(req.body)
-        res.status(200).json(course);
+        const task = await tasks.create(req.body)
+        res.status(200).json(task);
         
     } catch (error) {
         console.log(error.message);
@@ -25,20 +26,20 @@ app.post('/Course', async(req, res) => {
 
 // Get the data
 // All data at once
-app.get('/Course', async(req, res) => {
+app.get('/tasks', async(req, res) => {
     try {
-        const course = await Course.find({});
-        res.status(200).json(course);
+        const task = await tasks.find({});
+        res.status(200).json(task);
     } catch (error) {
         res.status(500).json({message: error.message})
     }
 })
 //Data by id
-app.get('/Course/:id', async(req, res) =>{
+app.get('/tasks/:id', async(req, res) =>{
     try {
         const {id} = req.params;
-        const course = await Course.findById(id);
-        res.status(200).json(course);
+        const task = await tasks.findById(id);
+        res.status(200).json(task);
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -46,16 +47,16 @@ app.get('/Course/:id', async(req, res) =>{
 
 // Update data by id
 // update a product
-app.put('/Course/:id', async(req, res) => {
+app.put('/tasks/:id', async(req, res) => {
     try {
         const {id} = req.params;
-        const course = await Course.findByIdAndUpdate(id, req.body);
+        const task = await tasks.findByIdAndUpdate(id, req.body);
         // we cannot find any course in database
-        if(!course){
-            return res.status(404).json({message: `cannot find any Course with ID ${id}`})
+        if(!task){
+            return res.status(404).json({message: `cannot find any Task with ID ${id}`})
         }
-        const updatedcourse = await Course.findById(id);
-        res.status(200).json(updatedcourse);
+        const updatedtask = await tasks.findById(id);
+        res.status(200).json(updatedtask);
         
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -64,15 +65,15 @@ app.put('/Course/:id', async(req, res) => {
 
 // delete a product
 
-app.delete('/Course/:id', async(req, res) =>{
+app.delete('/tasks/:id', async(req, res) =>{
     try {
         const {id} = req.params;
-        const course = await Course.findByIdAndDelete(id);
+        const task = await tasks.findByIdAndDelete(id);
         // If course does not exist
-        if(!course){
-            return res.status(404).json({message: `cannot find any course with ID ${id}`})
+        if(!task){
+            return res.status(404).json({message: `cannot find any task with ID ${id}`})
         }
-        res.status(200).json(course);
+        res.status(200).json(task);
         
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -80,8 +81,7 @@ app.delete('/Course/:id', async(req, res) =>{
 })
 
 
-mongoose.
-connect('mongodb+srv://amitxfactor018:12345678Amit@restamitapi.eubnx1t.mongodb.net/Courses?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGODBURL)
 .then(() => {
     console.log('connected to MongoDB')
     app.listen(3000, ()=> {

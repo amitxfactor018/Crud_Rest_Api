@@ -1,24 +1,22 @@
 const mongoose =  require('mongoose');
 
-const CourseSchema = new mongoose.Schema(
+const TaskSchema = new mongoose.Schema(
   {
-    Coursename: {
+    Taskname: {
       type: String,
       require: true,
-      min: 1,
-      max: 50,
       unique: true,
     },
     
-    Cousecode: {
+    Team_assigned: {
       type: String,
         require: true,
     },
-    Price: {
-      type: Number,
+    Start_day: {
+      type: String,
       required: true,
     },
-    Seats_available: {
+    Time_given_days: {
       type: Number,
       required: true,
     },
@@ -27,6 +25,6 @@ const CourseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const  Course = mongoose.model('Course', CourseSchema);
+const  tasks = mongoose.model('tasks', TaskSchema);
 
-module.exports=Course;
+module.exports= tasks;
